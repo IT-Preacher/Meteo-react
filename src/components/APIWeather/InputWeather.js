@@ -1,5 +1,4 @@
 import React ,{Component} from 'react';
-//import API_KEY from './APIKEY.js';
 
 class InputWeather extends Component{
   constructor(props){

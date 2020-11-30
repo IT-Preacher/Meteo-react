@@ -10,16 +10,17 @@ class App extends Component {
     this.state = {
       error: null,
       isLoaded: false,
-      city: null,
-      sys:{
+      main:{
+        city: null,
         country: null,
+        temp: null,
+      },
+      second:{
         sunrise: null,
         sunset: null,
-        temp: null,
-      }/*,
+      },/*
       weather:{
-        temp,
-        "feels_like"
+        "feels_like":,
       }*/
     };
   };
@@ -28,13 +29,6 @@ class App extends Component {
     e.preventDefault();
 
     const city = e.target.elements.city.value;
-    /*const api_url = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`);
-    const data = await api_url.json();
-    const {coord:{lon, lat}} = data;
-    const weatherStory = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude={part}&appid=${API_KEY}`);
-    const dataStory = await weatherStory.json();*/
-
-
 
     await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${API_KEY}`)
       .then(response => response.json())
@@ -45,23 +39,21 @@ class App extends Component {
         console.log(lon, lat);
         this.setState({
             isLoaded: true,
-            city: responseData.name,
-            sys:{
+            main:{
+              city: responseData.name,
               country:  responseData.sys.country,
+              temp:  Math.floor(responseData.main.temp),
+            },
+            second:{
               sunrise:  responseData.sys.sunrise,
               sunset:  responseData.sys.sunset,
-              temp:  responseData.main.temp
             }
           });
       });
-      console.log(this.state.city,
-        this.state.sys.country,
-        this.state.sys.sunrise,
-        this.state.sys.sunset);
-    //console.log(data);
-    //console.log(data.coord);
-    //console.log(dataStory);
-    //console.log(lon, lat);
+      console.log(this.state.main.city,
+        this.state.main.country,
+        this.state.second.sunrise,
+        this.state.second.sunset);
   }
 
 
@@ -71,8 +63,8 @@ class App extends Component {
         <InputWeather
         getWeather={this.getWeather} />
         <WeatherConteiner
-        city = {this.state.city}
-        temp = {this.state.sys.temp}/>
+        city = {this.state.main.city}
+        temp = {this.state.main.temp}/>
       </div>
     );
   }
