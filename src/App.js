@@ -13,15 +13,19 @@ class App extends Component {
       main:{
         city: null,
         country: null,
-        temp: null,
+        coord:{
+          lon: null,
+          lat: null,
+        },
       },
       second:{
         sunrise: null,
         sunset: null,
-      },/*
+      },
       weather:{
-        "feels_like":,
-      }*/
+        temp: null,
+        feelsLike: null,
+      },
     };
   };
 
@@ -34,25 +38,32 @@ class App extends Component {
       .then(response => response.json())
       .then(responseData => {
         const {coord:{lon, lat}} = responseData;
-
         console.log(responseData);
         console.log(lon, lat);
+
         this.setState({
             isLoaded: true,
             main:{
               city: responseData.name,
               country:  responseData.sys.country,
-              temp:  Math.floor(responseData.main.temp),
+              coord:{
+                lon: false,
+                lat: this.lat,
+              },
             },
             second:{
               sunrise:  responseData.sys.sunrise,
               sunset:  responseData.sys.sunset,
-            }
+            },
+            weather:{
+              temp: Math.floor(responseData.main.temp),
+              feelsLike: false,
+            },
           });
-      });
+      }).catch( error => console.log(`Could not fetch ${error}`));
       console.log(this.state.main.city,
-        this.state.main.country,
-        this.state.second.sunrise,
+        this.state.main.coord.lon,
+
         this.state.second.sunset);
   }
 
@@ -64,7 +75,7 @@ class App extends Component {
         getWeather={this.getWeather} />
         <WeatherConteiner
         city = {this.state.main.city}
-        temp = {this.state.main.temp}/>
+        temp = {this.state.weather.temp}/>
       </div>
     );
   }
